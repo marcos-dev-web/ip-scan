@@ -1,0 +1,32 @@
+
+function run_scan {
+    clear;
+    title="\e[1;35mScanning \e[0;36m$1.*\n\n";
+    subtitle="\n\e[1;36mUp ips:\n\n";
+    output="$title";
+    ipup="";
+
+    for i in {0..254}; do
+    	ip=$1.$i;
+    	testing="\n\e[0;33m[TESTING]\e[0m $ip\n";
+    	output="$title$subtitle$ipup$testing";
+    	printf "$output"
+    	if [ $(ping $ip -c 1 -i 0.2 2>/dev/null| grep "bytes from" | wc -l) == 1 ]; then
+    		ipup="$ipup\e[0;37m$ip\n"
+    	fi
+    	clear;
+    done
+}
+
+
+
+if [[ $# < 1 ]]; then
+    clear;
+	printf "\e[1;31m[ERROR]\e[0m You need pass an ip\n";
+	printf "\n\e[0;33m[EXAMPLE] \e[0m$0 10.0.0\n";
+	printf "\e[0;33m[OBS] \e[0;31mTHE LAST NUMBER MUST BE HIDEN\n";
+	exit 0
+else
+    run_scan $1
+fi
+
